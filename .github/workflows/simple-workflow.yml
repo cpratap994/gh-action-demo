@@ -34,6 +34,6 @@ jobs:
         id: tokenid
       
       - name: print token
-        run: echo $big_json
+        run: echo steps.tokenid.outputs.big_json
         
       
