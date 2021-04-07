@@ -7,7 +7,9 @@ env:
   PACKAGE_NAME : "neha-${{ github.sha }}.zip"
   AWS_REGION : "us-east-2"
 
-on: push
+on: 
+  push:
+   branches: [master]
   
 
 jobs:
