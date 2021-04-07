@@ -32,7 +32,7 @@ jobs:
           big_json="${big_json//$'\r'/'%0D'}"
           echo "::set-output name=big_json::$big_json"
           echo $big_json
-          echo ${{fromJson($big_json).id_token}}
+          echo ${{fromJson(big_json).id_token}}
           
         id: tokenid
       
