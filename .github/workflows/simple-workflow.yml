@@ -1,24 +1,41 @@
+
 name: CI
+env:
+  BUCKET_NAME : "neha-bucket123"
+  APP_NAME : "neha-app"
+  ENV_NAME : "Nehaapp-env"
+  PACKAGE_NAME : "neha-${{ github.sha }}.zip"
+  AWS_REGION : "us-east-2"
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-  workflow_dispatch:
+    branches: [ master ]
 
 jobs:
-  build:
+  S3PackageUpload:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      - name: Run a multi-line script
+      # Runs a single command using the runners shell
+      - name: Create zip
+        run: zip -r ${{ env.PACKAGE_NAME }} ./ -x "*.git"
+          
+      # Get ID token
+      - name: get ID token
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          big_json=$(curl -s -X POST -H "Content-Type:application/x-www-form-urlencoded" -d 'grant_type=password&client_id=ghactions&username=demorepo&password=HelloWorld123#&scope=openid&client_secret=HelloWorld123#' 'https://ghactionsoidc.azurewebsites.net/connect/token/')
+          big_json="${big_json//'%'/'%25'}"
+          big_json="${big_json//$'\n'/'%0A'}"
+          big_json="${big_json//$'\r'/'%0D'}"
+          echo "::set-output name=big_json::$big_json"
+        id: tokenid
+      
+      - name: print token
+        run: echo $big_json
+        
+      
