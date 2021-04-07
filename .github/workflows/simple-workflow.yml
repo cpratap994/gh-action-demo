@@ -31,9 +31,10 @@ jobs:
           big_json="${big_json//$'\n'/'%0A'}"
           big_json="${big_json//$'\r'/'%0D'}"
           echo "::set-output name=big_json::$big_json"
+          echo $big_json
+          
         id: tokenid
       
-      - name: print token
-        run: echo steps.tokenid.outputs.big_json
+    
         
       
